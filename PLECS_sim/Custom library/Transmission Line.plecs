@@ -1,0 +1,565 @@
+Plecs {
+  Name          "Transmission Line"
+  Version       "4.4"
+  CircuitModel  "ContStateSpace"
+  StartTime     "0.0"
+  StopTime      "1.0"
+  Timeout       ""
+  Solver        "dopri"
+  MaxStep       "1e-3"
+  InitStep      "-1"
+  FixedStep     "1e-3"
+  Refine        "1"
+  ZCStepSize    "1e-9"
+  RelTol        "1e-3"
+  AbsTol        "-1"
+  TurnOnThreshold "0"
+  SyncFixedStepTasks "2"
+  UseSingleCommonBaseRate "2"
+  LossVariableLimitExceededMsg "3"
+  NegativeSwitchLossMsg "3"
+  DivisionByZeroMsg "3"
+  StiffnessDetectionMsg "2"
+  MaxConsecutiveZCs "1000"
+  AlgebraicLoopWithStateMachineMsg "3"
+  AssertionAction "1"
+  InitializationCommands ""
+  InitialState  "1"
+  SystemState   ""
+  TaskingMode   "1"
+  TaskConfigurations ""
+  CodeGenParameterInlining "2"
+  CodeGenFloatingPointFormat "2"
+  CodeGenAbsTimeUsageMsg "3"
+  CodeGenBaseName ""
+  CodeGenOutputDir ""
+  CodeGenExtraOpts ""
+  CodeGenTarget "Generic"
+  CodeGenTargetSettings ""
+  ExtendedMatrixPrecision "1"
+  MatrixSignificanceCheck "2"
+  EnableStateSpaceSplitting "2"
+  DisplayStateSpaceSplitting "1"
+  DiscretizationMethod "2"
+  ExternalModeSettings ""
+  AlgebraicLoopMethod "1"
+  AlgebraicLoopTolerance "1e-6"
+  ScriptsDialogGeometry ""
+  ScriptsDialogSplitterPos "0"
+  Schematic {
+    Location      [320, 140; 720, 340]
+    ZoomFactor    1
+    SliderPosition [0, 0]
+    ShowBrowser   off
+    BrowserWidth  100
+    Component {
+      Type          Subsystem
+      Name          "T"
+      Show          on
+      Position      [190, 75]
+      Direction     up
+      Flipped       off
+      Frame         [-35, -5; 35, 5]
+      LabelPosition [0, -8]
+      LabelAlign    down
+      SampleTime    "-1"
+      CodeGenDiscretizationMethod "2"
+      CodeGenTarget "Generic"
+      MaskType      "3-Phase Transmission Line"
+      MaskIconFrame on
+      MaskIconOpaque off
+      MaskIconRotates on
+      Parameter {
+        Variable      "R"
+        Prompt        "Line resistances"
+        Type          FreeText
+        Value         "R"
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Parameter {
+        Variable      "L"
+        Prompt        "Self inductances"
+        Type          FreeText
+        Value         "L"
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Parameter {
+        Variable      "Cm"
+        Prompt        "Coupling capacitances"
+        Type          FreeText
+        Value         "Cm"
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Parameter {
+        Variable      "V_init"
+        Prompt        "Initial capacitor voltages (sending end)"
+        Type          FreeText
+        Value         "V_init"
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Parameter {
+        Variable      "v_init"
+        Prompt        "Initial capacitor voltages (receiving end)"
+        Type          FreeText
+        Value         "v_init"
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Terminal {
+        Type          Port
+        Position      [40, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Port
+        Position      [-40, 0]
+        Direction     left
+      }
+      Schematic {
+        Location      [320, 140; 1233, 676]
+        ZoomFactor    1
+        SliderPosition [0, 83]
+        ShowBrowser   off
+        BrowserWidth  100
+        Component {
+          Type          Resistor
+          Name          "R1"
+          Show          off
+          Position      [320, 40]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "R"
+            Value         "R(1)"
+            Show          off
+          }
+        }
+        Component {
+          Type          Resistor
+          Name          "R2"
+          Show          off
+          Position      [320, 100]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "R"
+            Value         "R(2)"
+            Show          off
+          }
+        }
+        Component {
+          Type          Resistor
+          Name          "R3"
+          Show          off
+          Position      [320, 165]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "R"
+            Value         "R(3)"
+            Show          off
+          }
+        }
+        Component {
+          Type          Inductor
+          Name          "L1"
+          Show          off
+          Position      [380, 40]
+          Direction     left
+          Flipped       off
+          Parameter {
+            Variable      "L"
+            Value         "L(1)"
+            Show          off
+          }
+          Parameter {
+            Variable      "i_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          Inductor
+          Name          "L2"
+          Show          off
+          Position      [380, 100]
+          Direction     left
+          Flipped       off
+          Parameter {
+            Variable      "L"
+            Value         "L(2)"
+            Show          off
+          }
+          Parameter {
+            Variable      "i_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          Inductor
+          Name          "L3"
+          Show          off
+          Position      [380, 165]
+          Direction     left
+          Flipped       off
+          Parameter {
+            Variable      "L"
+            Value         "L(3)"
+            Show          off
+          }
+          Parameter {
+            Variable      "i_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          WireMux
+          Name          "WMux1"
+          Show          off
+          Position      [155, 100]
+          Direction     right
+          Flipped       on
+          Parameter {
+            Variable      "Width"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          WireMux
+          Name          "WMux3"
+          Show          off
+          Position      [535, 115]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Width"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Port
+          Name          "-"
+          Show          on
+          Position      [565, 115]
+          Direction     left
+          Flipped       off
+          Parameter {
+            Variable      "Index"
+            Value         "1"
+            Show          on
+          }
+          Parameter {
+            Variable      "Width"
+            Value         "-1"
+            Show          off
+          }
+        }
+        Component {
+          Type          Port
+          Name          "+"
+          Show          on
+          Position      [115, 100]
+          Direction     left
+          Flipped       on
+          Parameter {
+            Variable      "Index"
+            Value         "2"
+            Show          on
+          }
+          Parameter {
+            Variable      "Width"
+            Value         "-1"
+            Show          off
+          }
+        }
+        Component {
+          Type          Capacitor
+          Name          "C7"
+          Show          off
+          Position      [215, 70]
+          Direction     down
+          Flipped       on
+          Parameter {
+            Variable      "C"
+            Value         "Cm(1)"
+            Show          off
+          }
+          Parameter {
+            Variable      "v_init"
+            Value         "V_init(1)-V_init(2)"
+            Show          off
+          }
+        }
+        Component {
+          Type          Capacitor
+          Name          "C8"
+          Show          off
+          Position      [240, 130]
+          Direction     down
+          Flipped       on
+          Parameter {
+            Variable      "C"
+            Value         "Cm(2)"
+            Show          off
+          }
+          Parameter {
+            Variable      "v_init"
+            Value         "V_init(2)-V_init(3)"
+            Show          off
+          }
+        }
+        Component {
+          Type          Capacitor
+          Name          "C9"
+          Show          off
+          Position      [265, 120]
+          Direction     down
+          Flipped       on
+          Parameter {
+            Variable      "C"
+            Value         "Cm(3)"
+            Show          off
+          }
+          Parameter {
+            Variable      "v_init"
+            Value         "V_init(1)-V_init(3)"
+            Show          off
+          }
+        }
+        Component {
+          Type          Capacitor
+          Name          "C10"
+          Show          off
+          Position      [490, 70]
+          Direction     down
+          Flipped       on
+          Parameter {
+            Variable      "C"
+            Value         "Cm(1)"
+            Show          off
+          }
+          Parameter {
+            Variable      "v_init"
+            Value         "v_init(1)-v_init(2)"
+            Show          off
+          }
+        }
+        Component {
+          Type          Capacitor
+          Name          "C11"
+          Show          off
+          Position      [435, 115]
+          Direction     down
+          Flipped       on
+          Parameter {
+            Variable      "C"
+            Value         "Cm(3)"
+            Show          off
+          }
+          Parameter {
+            Variable      "v_init"
+            Value         "v_init(1)-v_init(3)"
+            Show          off
+          }
+        }
+        Component {
+          Type          Capacitor
+          Name          "C12"
+          Show          off
+          Position      [465, 130]
+          Direction     down
+          Flipped       on
+          Parameter {
+            Variable      "C"
+            Value         "Cm(2)"
+            Show          off
+          }
+          Parameter {
+            Variable      "v_init"
+            Value         "v_init(2)-v_init(3)"
+            Show          off
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "R1"
+          SrcTerminal   1
+          DstComponent  "L1"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "R2"
+          SrcTerminal   1
+          DstComponent  "L2"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "R3"
+          SrcTerminal   1
+          DstComponent  "L3"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "-"
+          SrcTerminal   1
+          DstComponent  "WMux3"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "L1"
+          SrcTerminal   2
+          Points        [435, 40]
+          Branch {
+            Points        [490, 40]
+            Branch {
+              Points        [525, 40; 525, 105]
+              DstComponent  "WMux3"
+              DstTerminal   2
+            }
+            Branch {
+              DstComponent  "C10"
+              DstTerminal   1
+            }
+          }
+          Branch {
+            DstComponent  "C11"
+            DstTerminal   1
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "L2"
+          SrcTerminal   2
+          Points        [465, 100]
+          Branch {
+            Points        [490, 100]
+            Branch {
+              Points        [520, 100; 520, 115]
+              DstComponent  "WMux3"
+              DstTerminal   3
+            }
+            Branch {
+              DstComponent  "C10"
+              DstTerminal   2
+            }
+          }
+          Branch {
+            DstComponent  "C12"
+            DstTerminal   1
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "L3"
+          SrcTerminal   2
+          Points        [435, 165]
+          Branch {
+            Points        [465, 165]
+            Branch {
+              Points        [525, 165; 525, 125]
+              DstComponent  "WMux3"
+              DstTerminal   4
+            }
+            Branch {
+              DstComponent  "C12"
+              DstTerminal   2
+            }
+          }
+          Branch {
+            DstComponent  "C11"
+            DstTerminal   2
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "R2"
+          SrcTerminal   2
+          Points        [240, 100]
+          Branch {
+            Points        [215, 100]
+            Branch {
+              DstComponent  "WMux1"
+              DstTerminal   3
+            }
+            Branch {
+              DstComponent  "C7"
+              DstTerminal   2
+            }
+          }
+          Branch {
+            DstComponent  "C8"
+            DstTerminal   1
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "R1"
+          SrcTerminal   2
+          Points        [265, 40]
+          Branch {
+            Points        [215, 40]
+            Branch {
+              Points        [180, 40; 180, 90]
+              DstComponent  "WMux1"
+              DstTerminal   2
+            }
+            Branch {
+              DstComponent  "C7"
+              DstTerminal   1
+            }
+          }
+          Branch {
+            DstComponent  "C9"
+            DstTerminal   1
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "R3"
+          SrcTerminal   2
+          Points        [265, 165]
+          Branch {
+            Points        [240, 165]
+            Branch {
+              DstComponent  "C8"
+              DstTerminal   2
+            }
+            Branch {
+              Points        [180, 165; 180, 110]
+              DstComponent  "WMux1"
+              DstTerminal   4
+            }
+          }
+          Branch {
+            DstComponent  "C9"
+            DstTerminal   2
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "+"
+          SrcTerminal   1
+          DstComponent  "WMux1"
+          DstTerminal   1
+        }
+      }
+    }
+  }
+}
