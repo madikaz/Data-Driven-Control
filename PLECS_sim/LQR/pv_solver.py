@@ -6,7 +6,7 @@ import csv
 import mosek
 
 class sos_tracker():
-    def __init__(self, buffer_size=24, tolerance=12, eps=1e-9, deg=6, Vbase=250, Ibase=75, freq=10):
+    def __init__(self, buffer_size=20, tolerance=12, eps=5e-5, deg=4, Vbase=250, Ibase=75, freq=10):
         self.buffer_size = buffer_size
         self.buffer_I = np.array([])
         self.buffer_V = np.array([])
@@ -81,7 +81,7 @@ class sos_tracker():
     
     def find_vref(self, p_ref, v_ref, clipping = True):
         i_ref = p_ref/v_ref
-        if self.estimate(i_ref, v_ref/self.Vbase)<(p_ref*self.eps*100) and self.count!=1:
+        if self.estimate(i_ref, v_ref)<(p_ref*self.eps*100) and self.count!=1:
             return p_ref, v_ref
         else:
             p_est, v_est = self.track(p_ref, v_ref/self.Vbase)
@@ -98,7 +98,7 @@ class sos_tracker():
         vect = self.vectorize1d(self.deg,V/self.Vbase)
         p_est = np.dot(vect,-self.f)
         p_true = np.multiply(I,V)
-        print(p_est*self.Ibase*self.Vbase,p_true)
+        print(p_est[0]*self.Ibase*self.Vbase,p_true[0])
         return np.linalg.norm(p_est*self.Ibase*self.Vbase-p_true)
     
     def solve_sos(self):
@@ -119,32 +119,32 @@ class sos_tracker():
                 if i!=j :
                     con += [H[i-1,j-1]+H[j-1,i-1] == deg*(deg-1)*self.x_sos[k]]
                 else:
-                    con += [H[j-1,i-1] == deg*(deg-1)*self.x_sos[k]]
+                    con += [H[j-1,i-1]+0.01 == deg*(deg-1)*self.x_sos[k]]
                 k+= 1
         self.sos_prob = cp.Problem(obj, con)
         self.A_sos.value = self.vectorize2d(d)
         self.b_sos.value = np.multiply(self.buffer_I, self.buffer_V)/self.Vbase/self.Ibase
         # self.sos_prob.solve(solver = cp.CVXOPT,warm_start = False)
-        self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.free}, verbose=False,warm_start = True)
-        # try:
-        # 	# self.sos_prob.solve(solver = cp.SCS,verbose=False,warm_start = True)
-        # 	# self.sos_prob.solve(solver = cp.CVXOPT,warm_start = False)
-        #     self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.free}, verbose=False,warm_start = True)
-        # except:
-        #     print("Resolve optimization")
-        #     obj = cp.Minimize(cp.sum_squares(self.A_sos@self.x_sos + self.b_sos)+1*cp.sum_squares(self.x_sos))
-        #     self.sos_prob = cp.Problem(obj, con)
-        #     # self.sos_prob.solve(solver = cp.CVXOPT,warm_start = False)
-        #     self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.conic}, verbose=False,warm_start = False)
-        print(f"x value is: {self.x_sos.value}")
+#        self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.free}, verbose=False,warm_start = True)
+        try:
+            # self.sos_prob.solve(solver = cp.SCS,verbose=False,warm_start = True)
+            # self.sos_prob.solve(solver = cp.CVXOPT,warm_start = False)
+            self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.free}, verbose=False,warm_start = True)
+        except:
+            print("Resolve optimization")
+            obj = cp.Minimize(cp.sum_squares(self.A_sos@self.x_sos + self.b_sos)+0.01*cp.sum_squares(self.x_sos))
+            self.sos_prob = cp.Problem(obj, con)
+            # self.sos_prob.solve(solver = cp.CVXOPT,warm_start = False)
+            self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.conic}, verbose=False,warm_start = False)
+        # print(f"x value is: {self.x_sos.value}")
         self.f = np.zeros(self.deg+1)
         k = 0
         for i in range(1,d+1):
             for j in range(1,i+1):
                 self.f[i+j-2] += self.x_sos.value[k]
                 k+=1
-            self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]
-            self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]
+        self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]+[0]
+        self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]+[0]
 #            print(self.b_sos.value+np.dot(self.A_sos.value,self.x_sos.value))
 
 
@@ -236,8 +236,8 @@ class sos_tracker():
         k = 1.25*np.matmul( Pu, np.linalg.inv(np.eye(len(self.buffer_I)) + 1.25* np.matmul(u.T, Pu)))
         err = np.multiply(self.buffer_I, self.buffer_V) - poly.polyval(self.buffer_V, self.f)
         self.f = self.f + np.matmul(k, err)
-        self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]
-        self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]
+        self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]+[0]
+        self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]+[0]
         self.P_rlms = 1.25*self.P_rlms - 1.25* np.matmul(np.matmul(k, u.T),self.P_rlms)
 
     def solve_ekf(self):
@@ -245,32 +245,60 @@ class sos_tracker():
         self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]
         self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]
         return
+
+    def find_pmax(self, v):
+        v_est = v/self.Vbase
+        vect = self.vectorize1d(self.deg,[v_est])
+        g = -np.dot(vect, self.g)[0]
+        h = -np.dot(vect, self.h)[0]
+        p_est = np.dot(vect,-self.f)[0]
+        print(g,h,p_est,v_est)
+        count = 0
+        while abs(g)>self.eps and count<50:
+            v_est -= np.clip(g/h, -0.05,0.05)
+            vect = self.vectorize1d(self.deg,[v_est])
+            g = -np.dot(vect, self.g)[0]
+            h = -np.dot(vect, self.h)[0]
+            p_est = np.dot(vect,-self.f)[0]
+            count += 1
+            # print(g,h,p_est,v_est)
+        return p_est*self.Vbase*self.Ibase, v_est*self.Vbase
     
     def track(self, p, v):
         p = p/self.Vbase/self.Ibase
         flag = False
         v_est = v/self.Vbase
         count = 0
-        err = p + poly.polyval(v_est, self.f)
-        while abs(err)>self.eps and count<40:
+        vect = self.vectorize1d(self.deg,[v_est])
+        p_est = np.dot(vect,-self.f)[0]
+        err = p - p_est
+#        while abs(err)>self.eps and count<1000:
+#            g = np.dot(vect, self.g)
+#            h = np.dot(vect, self.h)
+#            v_est -= 0.1*g[0]/h[0]*err
+#            vect = self.vectorize1d(self.deg,[v_est])
+#            count += 1
+#            p_est = np.dot(vect,-self.f)[0]
+#            err = p - p_est
+#            print(p,p_est,v_est)
+        while abs(err)>self.eps and count<400:
+            g = -np.dot(vect, self.g)[0]
+            h = -np.dot(vect, self.h)[0]
+#            print(g,h)
             count += 1
             if not flag:
                 if err<0:
                     flag = True
                     count = 0
                 else:
-                    g = poly.polyval(v_est, self.g)
-                    h = poly.polyval(v_est, self.h)
-                    v_est -= np.clip(g/h, -1.0,1.0)
+                    v_est -= np.clip(g/h, -0.05,0.05)
             else:
-                g = poly.polyval(v_est, self.g)
-                h = poly.polyval(v_est, self.h)
-                if g>0:
-                    v_est -= np.clip(err/g, -1.0,1.0)
-                else:
-                    v_est -= np.clip(g/h, -1.0,1.0) +0.0001
-            err = p + poly.polyval(v_est, self.f)
-        return -poly.polyval(v_est, self.f)*self.Vbase*self.Ibase, v_est*self.Vbase
+                v_est -= g/h*err
+            vect = self.vectorize1d(self.deg,[v_est])
+            p_est = np.dot(vect,-self.f)[0]
+            err = p - p_est
+#        print(p,p_est,v_est,flag)
+        return p_est*self.Vbase*self.Ibase, v_est*self.Vbase
     
     def find_opt(self, v_est=100):
         count = 0
@@ -368,7 +396,7 @@ class pv_panel():
         dIdV = -dfdV*self.Ns/(dfdI*self.Np)
         return I*self.Np, dIdV
     
-    def find_opt(self, G, T):
+    def find_pmax(self, G, T):
         V = 100
         I = 10
         I, d = self.solve_i(G,T,I,V)
