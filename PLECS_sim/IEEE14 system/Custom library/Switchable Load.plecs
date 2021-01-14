@@ -1,0 +1,2020 @@
+Plecs {
+  Name          "Switchable Load"
+  Version       "4.4"
+  CircuitModel  "ContStateSpace"
+  StartTime     "0.0"
+  StopTime      "1.0"
+  Timeout       ""
+  Solver        "dopri"
+  MaxStep       "1e-3"
+  InitStep      "-1"
+  FixedStep     "1e-3"
+  Refine        "1"
+  ZCStepSize    "1e-9"
+  RelTol        "1e-3"
+  AbsTol        "-1"
+  TurnOnThreshold "0"
+  SyncFixedStepTasks "2"
+  UseSingleCommonBaseRate "2"
+  LossVariableLimitExceededMsg "3"
+  NegativeSwitchLossMsg "3"
+  DivisionByZeroMsg "3"
+  StiffnessDetectionMsg "2"
+  MaxConsecutiveZCs "1000"
+  AlgebraicLoopWithStateMachineMsg "3"
+  AssertionAction "1"
+  InitializationCommands ""
+  InitialState  "1"
+  SystemState   ""
+  TaskingMode   "1"
+  TaskConfigurations ""
+  CodeGenParameterInlining "2"
+  CodeGenFloatingPointFormat "2"
+  CodeGenAbsTimeUsageMsg "3"
+  CodeGenBaseName ""
+  CodeGenOutputDir ""
+  CodeGenExtraOpts ""
+  CodeGenTarget "Generic"
+  CodeGenTargetSettings ""
+  ExtendedMatrixPrecision "1"
+  MatrixSignificanceCheck "2"
+  EnableStateSpaceSplitting "2"
+  DisplayStateSpaceSplitting "1"
+  DiscretizationMethod "2"
+  ExternalModeSettings ""
+  AlgebraicLoopMethod "1"
+  AlgebraicLoopTolerance "1e-6"
+  ScriptsDialogGeometry ""
+  ScriptsDialogSplitterPos "0"
+  Schematic {
+    Location      [320, 140; 720, 340]
+    ZoomFactor    1
+    SliderPosition [0, 0]
+    ShowBrowser   off
+    BrowserWidth  100
+    Component {
+      Type          Subsystem
+      Name          "3ph\nSwitchable Load"
+      Show          on
+      Position      [220, 115]
+      Direction     up
+      Flipped       on
+      Frame         [-25, -15; 25, 15]
+      LabelPosition [0, -18]
+      LabelAlign    down
+      SampleTime    "-1"
+      CodeGenDiscretizationMethod "2"
+      CodeGenTarget "Generic"
+      MaskType      "Three-Phase Series RL Load"
+      MaskDescription "Three-phase series RL load"
+      MaskIconFrame on
+      MaskIconOpaque off
+      MaskIconRotates on
+      Parameter {
+        Variable      "R"
+        Prompt        "Resistances R (Ohms)"
+        Type          FreeText
+        Value         ""
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Parameter {
+        Variable      "L"
+        Prompt        "Inductances L (H)"
+        Type          FreeText
+        Value         ""
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Parameter {
+        Variable      "T"
+        Prompt        "Sample Times"
+        Type          FreeText
+        Value         ""
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Parameter {
+        Variable      "seed"
+        Prompt        "Random Seed"
+        Type          FreeText
+        Value         ""
+        Show          off
+        Tunable       on
+        TabName       ""
+      }
+      Terminal {
+        Type          Port
+        Position      [-30, 0]
+        Direction     left
+      }
+      Schematic {
+        Location      [311, 60; 1207, 697]
+        ZoomFactor    0.75
+        SliderPosition [0, 12]
+        ShowBrowser   off
+        BrowserWidth  100
+        Component {
+          Type          Port
+          Name          "+"
+          Show          on
+          Position      [560, 130]
+          Direction     up
+          Flipped       on
+          Parameter {
+            Variable      "Index"
+            Value         "1"
+            Show          on
+          }
+          Parameter {
+            Variable      "Width"
+            Value         "-1"
+            Show          off
+          }
+        }
+        Component {
+          Type          Subsystem
+          Name          "Load1"
+          Show          on
+          Position      [115, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          SampleTime    "-1"
+          CodeGenDiscretizationMethod "2"
+          CodeGenTarget "Generic"
+          MaskIconFrame on
+          MaskIconOpaque off
+          MaskIconRotates on
+          Parameter {
+            Variable      "R"
+            Prompt        "Resistance (Ohm)"
+            Type          FreeText
+            Value         "R(1)"
+            Show          off
+            Tunable       on
+            TabName       ""
+          }
+          Parameter {
+            Variable      "L"
+            Prompt        "Inductance (H)"
+            Type          FreeText
+            Value         "L(1)"
+            Show          off
+            Tunable       on
+            TabName       ""
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+          Schematic {
+            Location      [320, 140; 893, 669]
+            ZoomFactor    1
+            SliderPosition [0, 0]
+            ShowBrowser   off
+            BrowserWidth  100
+            Component {
+              Type          WireMux
+              Name          "mux1"
+              Show          off
+              Position      [280, 170]
+              Direction     up
+              Flipped       off
+              Parameter {
+                Variable      "Width"
+                Value         "3"
+                Show          off
+              }
+            }
+            Component {
+              Type          Ground
+              Name          "Ground1"
+              Show          off
+              Position      [280, 395]
+              Direction     down
+              Flipped       on
+            }
+            Component {
+              Type          Resistor
+              Name          "R1"
+              Show          off
+              Position      [185, 275]
+              Direction     up
+              Flipped       off
+              Parameter {
+                Variable      "R"
+                Value         "R"
+                Show          off
+              }
+            }
+            Component {
+              Type          Inductor
+              Name          "L1"
+              Show          off
+              Position      [140, 275]
+              Direction     down
+              Flipped       off
+              Parameter {
+                Variable      "L"
+                Value         "L"
+                Show          off
+              }
+              Parameter {
+                Variable      "i_init"
+                Value         "0"
+                Show          off
+              }
+            }
+            Component {
+              Type          Resistor
+              Name          "R2"
+              Show          off
+              Position      [305, 275]
+              Direction     up
+              Flipped       off
+              Parameter {
+                Variable      "R"
+                Value         "R"
+                Show          off
+              }
+            }
+            Component {
+              Type          Inductor
+              Name          "L2"
+              Show          off
+              Position      [260, 275]
+              Direction     down
+              Flipped       off
+              Parameter {
+                Variable      "L"
+                Value         "L"
+                Show          off
+              }
+              Parameter {
+                Variable      "i_init"
+                Value         "0"
+                Show          off
+              }
+            }
+            Component {
+              Type          Resistor
+              Name          "R3"
+              Show          off
+              Position      [420, 275]
+              Direction     up
+              Flipped       off
+              Parameter {
+                Variable      "R"
+                Value         "R"
+                Show          off
+              }
+            }
+            Component {
+              Type          Inductor
+              Name          "L3"
+              Show          off
+              Position      [375, 275]
+              Direction     down
+              Flipped       off
+              Parameter {
+                Variable      "L"
+                Value         "L"
+                Show          off
+              }
+              Parameter {
+                Variable      "i_init"
+                Value         "0"
+                Show          off
+              }
+            }
+            Component {
+              Type          Port
+              Name          "+"
+              Show          on
+              Position      [280, 105]
+              Direction     up
+              Flipped       on
+              Parameter {
+                Variable      "Index"
+                Value         "1"
+                Show          on
+              }
+              Parameter {
+                Variable      "Width"
+                Value         "-1"
+                Show          off
+              }
+            }
+            Connection {
+              Type          Wire
+              SrcComponent  "mux1"
+              SrcTerminal   2
+              Points        [270, 210; 185, 210; 185, 240]
+              Branch {
+                Points        [140, 240]
+                DstComponent  "L1"
+                DstTerminal   2
+              }
+              Branch {
+                DstComponent  "R1"
+                DstTerminal   1
+              }
+            }
+            Connection {
+              Type          Wire
+              SrcComponent  "mux1"
+              SrcTerminal   3
+              Points        [280, 240]
+              Branch {
+                Points        [260, 240]
+                DstComponent  "L2"
+                DstTerminal   2
+              }
+              Branch {
+                Points        [305, 240]
+                DstComponent  "R2"
+                DstTerminal   1
+              }
+            }
+            Connection {
+              Type          Wire
+              SrcComponent  "mux1"
+              SrcTerminal   4
+              Points        [290, 210; 375, 210; 375, 240]
+              Branch {
+                DstComponent  "L3"
+                DstTerminal   2
+              }
+              Branch {
+                Points        [420, 240]
+                DstComponent  "R3"
+                DstTerminal   1
+              }
+            }
+            Connection {
+              Type          Wire
+              SrcComponent  "Ground1"
+              SrcTerminal   1
+              Points        [280, 340]
+              Branch {
+                Points        [260, 340]
+                Branch {
+                  Points        [185, 340]
+                  Branch {
+                    DstComponent  "R1"
+                    DstTerminal   2
+                  }
+                  Branch {
+                    Points        [140, 340]
+                    DstComponent  "L1"
+                    DstTerminal   1
+                  }
+                }
+                Branch {
+                  DstComponent  "L2"
+                  DstTerminal   1
+                }
+              }
+              Branch {
+                Points        [305, 340]
+                Branch {
+                  Points        [375, 340]
+                  Branch {
+                    Points        [420, 340]
+                    DstComponent  "R3"
+                    DstTerminal   2
+                  }
+                  Branch {
+                    DstComponent  "L3"
+                    DstTerminal   1
+                  }
+                }
+                Branch {
+                  DstComponent  "R2"
+                  DstTerminal   2
+                }
+              }
+            }
+            Connection {
+              Type          Wire
+              SrcComponent  "mux1"
+              SrcTerminal   1
+              DstComponent  "+"
+              DstTerminal   1
+            }
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load2"
+          Show          on
+          Position      [220, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(2)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(2)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S1"
+          Show          on
+          Position      [115, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto"
+          Show          off
+          Position      [720, 595]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S1"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From"
+          Show          off
+          Position      [65, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S1"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S2"
+          Show          on
+          Position      [220, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From1"
+          Show          off
+          Position      [170, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S2"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load3"
+          Show          on
+          Position      [330, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(3)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(3)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S3"
+          Show          on
+          Position      [330, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From2"
+          Show          off
+          Position      [280, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S3"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load4"
+          Show          on
+          Position      [435, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(4)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(4)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load5"
+          Show          on
+          Position      [540, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(5)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(5)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S4"
+          Show          on
+          Position      [435, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From3"
+          Show          off
+          Position      [385, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S4"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S5"
+          Show          on
+          Position      [540, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From4"
+          Show          off
+          Position      [490, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S5"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load6"
+          Show          on
+          Position      [650, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(6)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(6)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S6"
+          Show          on
+          Position      [650, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From5"
+          Show          off
+          Position      [600, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S6"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load7"
+          Show          on
+          Position      [760, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(7)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(7)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load8"
+          Show          on
+          Position      [865, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(8)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(8)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S7"
+          Show          on
+          Position      [760, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From6"
+          Show          off
+          Position      [710, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S7"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S8"
+          Show          on
+          Position      [865, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From7"
+          Show          off
+          Position      [815, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S8"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load9"
+          Show          on
+          Position      [975, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(9)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(9)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S9"
+          Show          on
+          Position      [975, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From8"
+          Show          off
+          Position      [925, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S9"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Switchable Load/3ph\\nSwitchable Load/Load1"
+          Name          "Load10"
+          Show          on
+          Position      [1080, 465]
+          Direction     up
+          Flipped       off
+          Frame         [-20, -20; 20, 20]
+          LabelPosition [0, 0]
+          Parameter {
+            Variable      "R"
+            Value         "R(10)"
+            Show          off
+          }
+          Parameter {
+            Variable      "L"
+            Value         "L(10)"
+            Show          off
+          }
+          Terminal {
+            Type          Port
+            Position      [0, -25]
+            Direction     up
+          }
+        }
+        Component {
+          Type          Switch
+          Name          "S10"
+          Show          on
+          Position      [1080, 395]
+          Direction     down
+          Flipped       off
+          Parameter {
+            Variable      "s_init"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          From
+          Name          "From9"
+          Show          off
+          Position      [1030, 395]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S10"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          SignalDemux
+          Name          "Demux"
+          Show          off
+          Position      [585, 680]
+          Direction     right
+          Flipped       on
+          Parameter {
+            Variable      "Width"
+            Value         "10"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto1"
+          Show          off
+          Position      [720, 615]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S2"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto2"
+          Show          off
+          Position      [720, 635]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S3"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto3"
+          Show          off
+          Position      [720, 655]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S4"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto4"
+          Show          off
+          Position      [720, 675]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S5"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto5"
+          Show          off
+          Position      [720, 695]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S6"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto6"
+          Show          off
+          Position      [720, 715]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S7"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto7"
+          Show          off
+          Position      [720, 735]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S8"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto8"
+          Show          off
+          Position      [720, 755]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S9"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Goto
+          Name          "Goto9"
+          Show          off
+          Position      [720, 775]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Tag"
+            Value         "S10"
+            Show          off
+          }
+          Parameter {
+            Variable      "Visibility"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers"
+          Show          off
+          Position      [215, 530]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+1"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(1)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          CScript
+          Name          "C-Script"
+          Show          on
+          Position      [490, 680]
+          Direction     up
+          Flipped       off
+          Parameter {
+            Variable      "DialogGeometry"
+            Value         "[455 195 588 359]"
+            Show          off
+          }
+          Parameter {
+            Variable      "NumInputs"
+            Value         "[10]"
+            Show          off
+          }
+          Parameter {
+            Variable      "NumOutputs"
+            Value         "[10]"
+            Show          off
+          }
+          Parameter {
+            Variable      "NumContStates"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "NumDiscStates"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "NumZCSignals"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "DirectFeedthrough"
+            Value         "1"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "0.1"
+            Show          off
+          }
+          Parameter {
+            Variable      "Parameters"
+            Value         ""
+            Show          off
+          }
+          Parameter {
+            Variable      "LangStandard"
+            Value         "2"
+            Show          off
+          }
+          Parameter {
+            Variable      "GnuExtensions"
+            Value         "1"
+            Show          off
+          }
+          Parameter {
+            Variable      "RuntimeCheck"
+            Value         "2"
+            Show          off
+          }
+          Parameter {
+            Variable      "Declarations"
+            Value         ""
+            Show          off
+          }
+          Parameter {
+            Variable      "StartFcn"
+            Value         ""
+            Show          off
+          }
+          Parameter {
+            Variable      "OutputFcn"
+            Value         "for (int i=0;i<10;i++){\n\tif (InputSignal(0,i)>4){"
+"\n\t\tOutputSignal(0,i) = 1;\n\t}\n\telse{\n\t\tOutputSignal(0,i) = 0;\n\t}\n"
+"}"
+            Show          off
+          }
+          Parameter {
+            Variable      "UpdateFcn"
+            Value         ""
+            Show          off
+          }
+          Parameter {
+            Variable      "DerivativeFcn"
+            Value         ""
+            Show          off
+          }
+          Parameter {
+            Variable      "TerminateFcn"
+            Value         ""
+            Show          off
+          }
+        }
+        Component {
+          Type          SignalMux
+          Name          "Mux"
+          Show          off
+          Position      [410, 680]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Width"
+            Value         "10"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers1"
+          Show          off
+          Position      [215, 565]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+2"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(2)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers2"
+          Show          off
+          Position      [215, 600]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+3"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(3)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers3"
+          Show          off
+          Position      [215, 635]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+4"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(4)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers4"
+          Show          off
+          Position      [215, 670]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+5"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(5)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers5"
+          Show          off
+          Position      [215, 705]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+6"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(6)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers6"
+          Show          off
+          Position      [215, 740]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+7"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(7)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers7"
+          Show          off
+          Position      [215, 775]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+8"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(8)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers8"
+          Show          off
+          Position      [215, 810]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+9"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(9)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Random\\nNumbers"
+          Name          "Random\nNumbers9"
+          Show          off
+          Position      [215, 845]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "min"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "max"
+            Value         "10"
+            Show          off
+          }
+          Parameter {
+            Variable      "seed"
+            Value         "seed+10"
+            Show          off
+          }
+          Parameter {
+            Variable      "Ts"
+            Value         "T(10)"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S1"
+          SrcTerminal   1
+          DstComponent  "Load1"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From"
+          SrcTerminal   1
+          DstComponent  "S1"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From1"
+          SrcTerminal   1
+          DstComponent  "S2"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From2"
+          SrcTerminal   1
+          DstComponent  "S3"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S4"
+          SrcTerminal   1
+          DstComponent  "Load4"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From3"
+          SrcTerminal   1
+          DstComponent  "S4"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From4"
+          SrcTerminal   1
+          DstComponent  "S5"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From5"
+          SrcTerminal   1
+          DstComponent  "S6"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S7"
+          SrcTerminal   1
+          DstComponent  "Load7"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From6"
+          SrcTerminal   1
+          DstComponent  "S7"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From7"
+          SrcTerminal   1
+          DstComponent  "S8"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From8"
+          SrcTerminal   1
+          DstComponent  "S9"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S10"
+          SrcTerminal   1
+          DstComponent  "Load10"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "From9"
+          SrcTerminal   1
+          DstComponent  "S10"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S1"
+          SrcTerminal   2
+          Points        [115, 290; 220, 290]
+          Branch {
+            Points        [330, 290]
+            Branch {
+              Points        [435, 290]
+              Branch {
+                Points        [540, 290]
+                Branch {
+                  Points        [560, 290]
+                  Branch {
+                    DstComponent  "+"
+                    DstTerminal   1
+                  }
+                  Branch {
+                    Points        [650, 290]
+                    Branch {
+                      Points        [760, 290]
+                      Branch {
+                        Points        [865, 290]
+                        Branch {
+                          Points        [975, 290]
+                          Branch {
+                            Points        [1080, 290]
+                            DstComponent  "S10"
+                            DstTerminal   2
+                          }
+                          Branch {
+                            DstComponent  "S9"
+                            DstTerminal   2
+                          }
+                        }
+                        Branch {
+                          DstComponent  "S8"
+                          DstTerminal   2
+                        }
+                      }
+                      Branch {
+                        DstComponent  "S7"
+                        DstTerminal   2
+                      }
+                    }
+                    Branch {
+                      DstComponent  "S6"
+                      DstTerminal   2
+                    }
+                  }
+                }
+                Branch {
+                  DstComponent  "S5"
+                  DstTerminal   2
+                }
+              }
+              Branch {
+                DstComponent  "S4"
+                DstTerminal   2
+              }
+            }
+            Branch {
+              DstComponent  "S3"
+              DstTerminal   2
+            }
+          }
+          Branch {
+            DstComponent  "S2"
+            DstTerminal   2
+          }
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S2"
+          SrcTerminal   1
+          DstComponent  "Load2"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S3"
+          SrcTerminal   1
+          DstComponent  "Load3"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S5"
+          SrcTerminal   1
+          DstComponent  "Load5"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S6"
+          SrcTerminal   1
+          DstComponent  "Load6"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S8"
+          SrcTerminal   1
+          DstComponent  "Load8"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Wire
+          SrcComponent  "S9"
+          SrcTerminal   1
+          DstComponent  "Load9"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   2
+          Points        [620, 635; 620, 595]
+          DstComponent  "Goto"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   3
+          Points        [625, 645; 625, 615]
+          DstComponent  "Goto1"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   4
+          Points        [630, 655; 630, 635]
+          DstComponent  "Goto2"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   5
+          Points        [635, 665; 635, 655]
+          DstComponent  "Goto3"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   6
+          DstComponent  "Goto4"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   7
+          Points        [645, 685; 645, 695]
+          DstComponent  "Goto5"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   8
+          Points        [640, 695; 640, 715]
+          DstComponent  "Goto6"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   9
+          Points        [635, 705; 635, 735]
+          DstComponent  "Goto7"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   10
+          Points        [630, 715; 630, 755]
+          DstComponent  "Goto8"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Demux"
+          SrcTerminal   11
+          Points        [625, 725; 625, 775]
+          DstComponent  "Goto9"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "C-Script"
+          SrcTerminal   2
+          DstComponent  "Demux"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Mux"
+          SrcTerminal   1
+          DstComponent  "C-Script"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers"
+          SrcTerminal   1
+          Points        [360, 530; 360, 635]
+          DstComponent  "Mux"
+          DstTerminal   2
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers1"
+          SrcTerminal   1
+          Points        [355, 565; 355, 645]
+          DstComponent  "Mux"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers2"
+          SrcTerminal   1
+          Points        [350, 600; 350, 655]
+          DstComponent  "Mux"
+          DstTerminal   4
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers3"
+          SrcTerminal   1
+          Points        [345, 635; 345, 665]
+          DstComponent  "Mux"
+          DstTerminal   5
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers4"
+          SrcTerminal   1
+          Points        [340, 670; 340, 675]
+          DstComponent  "Mux"
+          DstTerminal   6
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers5"
+          SrcTerminal   1
+          Points        [315, 705; 315, 685]
+          DstComponent  "Mux"
+          DstTerminal   7
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers6"
+          SrcTerminal   1
+          Points        [320, 740; 320, 695]
+          DstComponent  "Mux"
+          DstTerminal   8
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers7"
+          SrcTerminal   1
+          Points        [325, 775; 325, 705]
+          DstComponent  "Mux"
+          DstTerminal   9
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers8"
+          SrcTerminal   1
+          Points        [330, 810; 330, 715]
+          DstComponent  "Mux"
+          DstTerminal   10
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Random\nNumbers9"
+          SrcTerminal   1
+          Points        [335, 845; 335, 725]
+          DstComponent  "Mux"
+          DstTerminal   11
+        }
+      }
+    }
+  }
+}

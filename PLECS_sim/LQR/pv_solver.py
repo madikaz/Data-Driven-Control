@@ -22,6 +22,11 @@ class sos_tracker():
         self.freq = freq
         self.momentum = 0.5
         self.sos_prob = None
+        self.Mask = np.zeros((deg//2,deg//2,deg-1))
+        for i in range(deg//2):
+            for j in range(deg//2):
+                self.Mask[i,j,i+j] = 1
+        self.Mask = self.Mask == 1
 
     def update_curve(self, I, V):
         I = np.array(I)
@@ -96,7 +101,7 @@ class sos_tracker():
     def estimate(self, I, V):
         # p_est = poly.polyval(V/self.Vbase, -self.f)
         vect = self.vectorize1d(self.deg,V/self.Vbase)
-        p_est = np.dot(vect,-self.f)
+        p_est = np.dot(vect,self.f)
         p_true = np.multiply(I,V)
         print(p_est[0]*self.Ibase*self.Vbase,p_true[0])
         return np.linalg.norm(p_est*self.Ibase*self.Vbase-p_true)
@@ -105,24 +110,18 @@ class sos_tracker():
         if len(self.buffer_I)>self.buffer_size:
             self.buffer_I = self.buffer_I[-self.buffer_size:]
             self.buffer_V = self.buffer_V[-self.buffer_size:]
-        d = int(self.deg/2+1)
-        self.x_sos = cp.Variable(int(d*(d+1)/2))
-        self.A_sos = cp.Parameter((self.buffer_size, int(d*(d+1)/2)))
+        d = self.deg
+        self.x_sos = cp.Variable(d+1)
+        self.A_sos = cp.Parameter((self.buffer_size, d+1))
         self.b_sos = cp.Parameter(self.buffer_size)
-        obj = cp.Minimize(cp.sum_squares(self.A_sos@self.x_sos + self.b_sos))
-        H = cp.Variable((d-1, d-1), PSD = True)
+        obj = cp.Minimize(cp.sum_squares(self.A_sos@self.x_sos - self.b_sos))
+        H = cp.Variable((d//2, d//2), PSD = True)
         con = []
-        k = 0
-        for i in range(1,d):
-            for j in range(1,i+1):
-                deg = self.deg+2-i-j
-                if i!=j :
-                    con += [H[i-1,j-1]+H[j-1,i-1] == deg*(deg-1)*self.x_sos[k]]
-                else:
-                    con += [H[j-1,i-1]+0.01 == deg*(deg-1)*self.x_sos[k]]
-                k+= 1
+        for i in range(d-1):
+            deg = self.deg-i
+            con += [sum(H[self.Mask[:,:,i]]) == -deg*(deg-1)*self.x_sos[i]]
         self.sos_prob = cp.Problem(obj, con)
-        self.A_sos.value = self.vectorize2d(d)
+        self.A_sos.value = self.vectorize1d(d,self.buffer_V/self.Vbase)
         self.b_sos.value = np.multiply(self.buffer_I, self.buffer_V)/self.Vbase/self.Ibase
         # self.sos_prob.solve(solver = cp.CVXOPT,warm_start = False)
 #        self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.free}, verbose=False,warm_start = True)
@@ -132,19 +131,20 @@ class sos_tracker():
             self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.free}, verbose=False,warm_start = True)
         except:
             print("Resolve optimization")
-            obj = cp.Minimize(cp.sum_squares(self.A_sos@self.x_sos + self.b_sos)+0.01*cp.sum_squares(self.x_sos))
+            obj = cp.Minimize(cp.sum_squares(self.A_sos@self.x_sos - self.b_sos)+0.01*cp.sum_squares(self.x_sos))
             self.sos_prob = cp.Problem(obj, con)
             # self.sos_prob.solve(solver = cp.CVXOPT,warm_start = False)
             self.sos_prob.solve(solver = cp.MOSEK,mosek_params={mosek.iparam.optimizer:mosek.optimizertype.conic}, verbose=False,warm_start = False)
-        # print(f"x value is: {self.x_sos.value}")
-        self.f = np.zeros(self.deg+1)
-        k = 0
-        for i in range(1,d+1):
-            for j in range(1,i+1):
-                self.f[i+j-2] += self.x_sos.value[k]
-                k+=1
-        self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]+[0]
-        self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]+[0]
+        print(f"x value is: {self.x_sos.value}")
+        print(f"H value is: {H.value}")
+        E = np.linalg.eig(H.value)[0]
+        print(f"H eigenvalues: {E}")
+        self.f = self.x_sos.value
+        self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]
+        self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]
+        print(self.f)
+        print(self.g)
+        print(self.h)
 #            print(self.b_sos.value+np.dot(self.A_sos.value,self.x_sos.value))
 
 
@@ -236,8 +236,8 @@ class sos_tracker():
         k = 1.25*np.matmul( Pu, np.linalg.inv(np.eye(len(self.buffer_I)) + 1.25* np.matmul(u.T, Pu)))
         err = np.multiply(self.buffer_I, self.buffer_V) - poly.polyval(self.buffer_V, self.f)
         self.f = self.f + np.matmul(k, err)
-        self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]+[0]
-        self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]+[0]
+        self.g = [v*(self.deg-idx) for idx,v in enumerate(self.f[:-1])]
+        self.h = [v*(self.deg-idx-1) for idx,v in enumerate(self.g[:-1])]
         self.P_rlms = 1.25*self.P_rlms - 1.25* np.matmul(np.matmul(k, u.T),self.P_rlms)
 
     def solve_ekf(self):
@@ -248,20 +248,20 @@ class sos_tracker():
 
     def find_pmax(self, v):
         v_est = v/self.Vbase
-        vect = self.vectorize1d(self.deg,[v_est])
-        g = -np.dot(vect, self.g)[0]
-        h = -np.dot(vect, self.h)[0]
-        p_est = np.dot(vect,-self.f)[0]
+        vect = self.vectorize1d(self.deg,[v_est])[0]
+        p_est = np.dot(vect,self.f)
+        g = np.dot(vect[1:], self.g)
+        h = np.dot(vect[2:], self.h)
         print(g,h,p_est,v_est)
         count = 0
         while abs(g)>self.eps and count<50:
             v_est -= np.clip(g/h, -0.05,0.05)
-            vect = self.vectorize1d(self.deg,[v_est])
-            g = -np.dot(vect, self.g)[0]
-            h = -np.dot(vect, self.h)[0]
-            p_est = np.dot(vect,-self.f)[0]
+            vect = self.vectorize1d(self.deg,[v_est])[0]
+            p_est = np.dot(vect, self.f)
+            g = np.dot(vect[1:], self.g)
+            h = np.dot(vect[2:], self.h)
             count += 1
-            # print(g,h,p_est,v_est)
+            print(g,h,p_est,v_est)
         return p_est*self.Vbase*self.Ibase, v_est*self.Vbase
     
     def track(self, p, v):
@@ -269,35 +269,27 @@ class sos_tracker():
         flag = False
         v_est = v/self.Vbase
         count = 0
-        vect = self.vectorize1d(self.deg,[v_est])
-        p_est = np.dot(vect,-self.f)[0]
+        vect = self.vectorize1d(self.deg,[v_est])[0]
+        p_est = np.dot(vect,self.f)
         err = p - p_est
-#        while abs(err)>self.eps and count<1000:
-#            g = np.dot(vect, self.g)
-#            h = np.dot(vect, self.h)
-#            v_est -= 0.1*g[0]/h[0]*err
-#            vect = self.vectorize1d(self.deg,[v_est])
-#            count += 1
-#            p_est = np.dot(vect,-self.f)[0]
-#            err = p - p_est
-#            print(p,p_est,v_est)
-        while abs(err)>self.eps and count<400:
-            g = -np.dot(vect, self.g)[0]
-            h = -np.dot(vect, self.h)[0]
-#            print(g,h)
+        while abs(err)>self.eps and count<1000:
+            g = np.dot(vect[1:], self.g)
+            h = np.dot(vect[2:], self.h)
+#            print(v_est,p_est,g,h,flag)
+            if h>=0: print(f"Hessian is not concave: {h}")
             count += 1
             if not flag:
                 if err<0:
                     flag = True
                     count = 0
                 else:
-                    v_est -= np.clip(g/h, -0.05,0.05)
+                    v_est -= 0.1*np.clip(g/h, -0.01,0.01)
             else:
-                v_est -= g/h*err
-            vect = self.vectorize1d(self.deg,[v_est])
-            p_est = np.dot(vect,-self.f)[0]
+                v_est -= 0.1*np.clip(g/h*err,-0.01,0.01)
+            vect = self.vectorize1d(self.deg,[v_est])[0]
+            p_est = np.dot(vect,self.f)
             err = p - p_est
-#        print(p,p_est,v_est,flag)
+        print(p,p_est,v_est,flag)
         return p_est*self.Vbase*self.Ibase, v_est*self.Vbase
     
     def find_opt(self, v_est=100):
@@ -319,7 +311,7 @@ class sos_tracker():
     def vectorize2d(self, deg):
         A1 = self.vectorize1d(deg-1, self.buffer_V/self.Vbase)
         l1 = int(deg*(deg+1)/2)
-        l2 = int(len(self.buffer_V/self.Vbase))
+        l2 = int(len(self.buffer_V))
         A = np.zeros((l2,l1))
         k = 0
         for i in range(1,deg+1):
