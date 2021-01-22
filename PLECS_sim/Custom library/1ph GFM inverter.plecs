@@ -1113,11 +1113,22 @@ Plecs {
               Position      [385, 95]
               Direction     up
               Flipped       off
-              Location      [0, 0; 0, 0]
-              State         ""
-              SavedViews    ""
-              HeaderState   ""
-              PlotPalettes  ""
+              Location      [320, 140; 670, 479]
+              State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQA"
+"FoAbwBvAG0AQQByAGUAYQAAAAAA/////wAAAFwA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcw"
+"AAAAAA/////wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAA"
+"AAAAAAPwBAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAAAV4A"
+"AAE4AAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP///"
+"/8AAAAAAAAAAA=="
+              SavedViews    "AAAAAgAAAAA="
+              HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAA"
+"AAJAAAAAQAAAGQAAAACAAAAZAAAAAMAAABkAAAACAAAAGQAAAAJAAAAZAAAAAQAAABkAAAABQAAAG"
+"QAAAAGAAAAZAAAAAcAAABkAAAAZwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAs"
+"AAABAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAA"
+"AAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA"
+"QAAAAAAAAAnAAAAAQAAAAAAAAPoAAAAACc="
+              PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+"AAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
               Axes          "2"
               TimeRange     "0"
               ScrollingMode "1"
@@ -1264,7 +1275,7 @@ Plecs {
               Flipped       off
               Parameter {
                 Variable      "K"
-                Value         "1e-4*10"
+                Value         "1e-4*1e2"
                 Show          off
               }
               Parameter {
@@ -1287,7 +1298,7 @@ Plecs {
               Flipped       off
               Parameter {
                 Variable      "K"
-                Value         "1e-6*10"
+                Value         "1e-6*1e4"
                 Show          off
               }
               Parameter {

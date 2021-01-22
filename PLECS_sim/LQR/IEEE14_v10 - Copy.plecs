@@ -4988,7 +4988,7 @@ Plecs {
     }
     Component {
       Type          Subsystem
-      Name          "GFL\ninverter 8"
+      Name          "GFL\ninverter 5"
       Show          on
       Position      [1325, 555]
       Direction     right
@@ -5932,7 +5932,7 @@ Plecs {
     }
     Component {
       Type          Subsystem
-      Name          "GFM\ninverter 6"
+      Name          "GFM\ninverter 4"
       Show          on
       Position      [575, 520]
       Direction     down
@@ -7026,7 +7026,7 @@ Plecs {
           Branch {
             Points        [640, 520]
             Branch {
-              DstComponent  "GFM\ninverter 6"
+              DstComponent  "GFM\ninverter 4"
               DstTerminal   1
             }
             Branch {
@@ -7133,7 +7133,7 @@ Plecs {
       SrcComponent  "T7_8"
       SrcTerminal   1
       Points        [1325, 490]
-      DstComponent  "GFL\ninverter 8"
+      DstComponent  "GFL\ninverter 5"
       DstTerminal   1
     }
     Connection {
@@ -7166,7 +7166,7 @@ Plecs {
     }
     Annotation {
       Name          "Bus 9"
-      Position      [1160, 350]
+      Position      [1160, 335]
     } 
     Annotation {
       Name          "Bus 11"
@@ -7178,15 +7178,39 @@ Plecs {
     } 
     Annotation {
       Name          "Bus 2"
-      Position      [905, 865]
+      Position      [910, 860]
     } 
     Annotation {
       Name          "Bus 3"
-      Position      [1160, 855]
+      Position      [1165, 860]
     } 
     Annotation {
       Name          "Bus 6"
       Position      [665, 535]
+    } 
+    Annotation {
+      Name          "Bus 8"
+      Position      [1325, 475]
+    } 
+    Annotation {
+      Name          "Bus 4"
+      Position      [1165, 675]
+    } 
+    Annotation {
+      Name          "Bus 5"
+      Position      [695, 675]
+    } 
+    Annotation {
+      Name          "Bus 10"
+      Position      [900, 395]
+    } 
+    Annotation {
+      Name          "Bus 12"
+      Position      [655, 245]
+    } 
+    Annotation {
+      Name          "Bus 14"
+      Position      [980, 275]
     } 
   }
 }

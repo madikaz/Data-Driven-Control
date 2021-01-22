@@ -1,0 +1,176 @@
+Plecs {
+  Name          "3ph GFM Sec Con"
+  Version       "4.4"
+  CircuitModel  "ContStateSpace"
+  StartTime     "0.0"
+  StopTime      "1.0"
+  Timeout       ""
+  Solver        "dopri"
+  MaxStep       "1e-3"
+  InitStep      "-1"
+  FixedStep     "1e-3"
+  Refine        "1"
+  ZCStepSize    "1e-9"
+  RelTol        "1e-3"
+  AbsTol        "-1"
+  TurnOnThreshold "0"
+  SyncFixedStepTasks "2"
+  UseSingleCommonBaseRate "2"
+  LossVariableLimitExceededMsg "3"
+  NegativeSwitchLossMsg "3"
+  DivisionByZeroMsg "3"
+  StiffnessDetectionMsg "2"
+  MaxConsecutiveZCs "1000"
+  AlgebraicLoopWithStateMachineMsg "3"
+  AssertionAction "1"
+  InitializationCommands ""
+  InitialState  "1"
+  SystemState   ""
+  TaskingMode   "1"
+  TaskConfigurations ""
+  CodeGenParameterInlining "2"
+  CodeGenFloatingPointFormat "2"
+  CodeGenAbsTimeUsageMsg "3"
+  CodeGenBaseName ""
+  CodeGenOutputDir ""
+  CodeGenExtraOpts ""
+  CodeGenTarget "Generic"
+  CodeGenTargetSettings ""
+  ExtendedMatrixPrecision "1"
+  MatrixSignificanceCheck "2"
+  EnableStateSpaceSplitting "2"
+  DisplayStateSpaceSplitting "1"
+  DiscretizationMethod "2"
+  ExternalModeSettings ""
+  AlgebraicLoopMethod "1"
+  AlgebraicLoopTolerance "1e-6"
+  ScriptsDialogGeometry ""
+  ScriptsDialogSplitterPos "0"
+  Schematic {
+    Location      [320, 140; 720, 340]
+    ZoomFactor    1
+    SliderPosition [0, 0]
+    ShowBrowser   off
+    BrowserWidth  100
+    Component {
+      Type          CScript
+      Name          "3ph GFM inverter\nsec. control"
+      Show          on
+      Position      [195, 85]
+      Direction     up
+      Flipped       off
+      Parameter {
+        Variable      "DialogGeometry"
+        Value         "[0 22 1280 737]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumInputs"
+        Value         "[5]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumOutputs"
+        Value         "[1,1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumContStates"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumDiscStates"
+        Value         "3"
+        Show          off
+      }
+      Parameter {
+        Variable      "NumZCSignals"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "DirectFeedthrough"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ts"
+        Value         "1e-2"
+        Show          off
+      }
+      Parameter {
+        Variable      "Parameters"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "LangStandard"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "GnuExtensions"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "RuntimeCheck"
+        Value         "2"
+        Show          off
+      }
+      Parameter {
+        Variable      "Declarations"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "StartFcn"
+        Value         "OutputSignal(0,0) = 30000;\nOutputSignal(1,0) = 20000;"
+"\nDiscState(0)=0.1;\nDiscState(1)=5;\nDiscState(2)=0;"
+        Show          off
+      }
+      Parameter {
+        Variable      "OutputFcn"
+        Value         "float x; \nfloat Vnom = 277.128;  // 480/sqrt(3)\n/*\ni"
+"f (CurrentTime<100 && CurrentTime >= DiscState(0)){\n\t\n\tDiscState(0) += 0."
+"1;\n\t\n\t// Secondary frequency controller\n\tif (InputSignal(0,0)>60.01 || "
+"InputSignal(0,0)<59.99){\n\t\tx = InputSignal(0,0)-60;\n\t\tif (x>0.5) x=0.5;"
+"\n\t\telse if (x<-0.5) x=-0.5;\n\t\tif (CurrentTime>1) {OutputSignal(0,0) -= "
+"400*x;}\n\t}\n\t\n\t// Secondary voltage controller\n\tif (InputSignal(0,2)>1"
+".1*Vnom) {\n\t\tx = InputSignal(0,2)-1.1*Vnom;\n\t\tif (x>0.1*Vnom) x=0.1*Vno"
+"m;\n\t\tOutputSignal(1,0) -= x;\n\t}\n\t\n\tif (InputSignal(0,1)<0.9*Vnom) {"
+"\n\t\tx = InputSignal(0,1)-0.9*Vnom;\n\t\tif (x<-0.1*Vnom) x=-0.1*Vnom;\n\t\t"
+"OutputSignal(1,0) -= x;\t\t\n\t}\n\t\n}\nelse if (CurrentTime >= DiscState(1)"
+"+2e-2){\n\tOutputSignal(0,0)+=InputSignal(0,3);\n\tOutputSignal(1,0)+=InputSi"
+"gnal(0,4);\n\tif(DiscState(2)==2){DiscState(1)+=2;DiscState(2)=0;}\n\telse{Di"
+"scState(1)+=1;DiscState(2)+=1;}\n}\n*/\nif (CurrentTime >= DiscState(1)+2e-2)"
+"{\n\t// Secondary frequency controller\n\tif (InputSignal(0,0)>60.01 || Input"
+"Signal(0,0)<59.99){\n\t\tx = InputSignal(0,0)-60;\n\t\tif (x>0.5) x=0.5;\n\t"
+"\telse if (x<-0.5) x=-0.5;\n\t\tif (CurrentTime>1) {OutputSignal(0,0) -= 2e3*"
+"x;}\n\t}\n\t\n\t// Secondary voltage controller\n\tif (InputSignal(0,2)>1.1*V"
+"nom) {\n\t\tx = InputSignal(0,2)-1.1*Vnom;\n\t\tif (x>0.1*Vnom) x=0.1*Vnom;\n"
+"\t\tOutputSignal(1,0) -= x;\n\t}\n\t\n\tif (InputSignal(0,1)<0.9*Vnom) {\n\t"
+"\tx = InputSignal(0,1)-0.9*Vnom;\n\t\tif (x<-0.1*Vnom) x=-0.1*Vnom;\n\t\tOutp"
+"utSignal(1,0) -= 1e2*x;\t\t\n\t}\n\tif(DiscState(2)==2){DiscState(1)+=2;DiscS"
+"tate(2)=0;}\n\telse{DiscState(1)+=1;DiscState(2)+=1;}\n}\n"
+        Show          off
+      }
+      Parameter {
+        Variable      "UpdateFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "DerivativeFcn"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "TerminateFcn"
+        Value         ""
+        Show          off
+      }
+    }
+  }
+}
