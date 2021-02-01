@@ -156,7 +156,7 @@ Plecs {
         Variable      "Ki_PLL"
         Prompt        "Integral gain"
         Type          FreeText
-        Value         "2"
+        Value         "2*10"
         Show          off
         Tunable       off
         TabName       "PLL"
@@ -211,7 +211,7 @@ Plecs {
       Schematic {
         Location      [0, 27; 1280, 715]
         ZoomFactor    1.14797
-        SliderPosition [0, -1]
+        SliderPosition [0, 50]
         ShowBrowser   off
         BrowserWidth  100
         Component {
@@ -271,11 +271,21 @@ Plecs {
           Position      [750, 255]
           Direction     up
           Flipped       off
-          Location      [0, 0; 0, 0]
-          State         ""
-          SavedViews    ""
-          HeaderState   ""
-          PlotPalettes  ""
+          Location      [320, 140; 670, 367]
+          State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAb"
+"wBvAG0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAA"
+"AA/////wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAA"
+"AAPwBAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAAAV4AAADI"
+"AAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AA"
+"AAAAAAAAA=="
+          SavedViews    "AAAAAgAAAAA="
+          HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJA"
+"AAACQAAAGQAAAAIAAAAZAAAAAUAAABkAAAABAAAAGQAAAAHAAAAZAAAAAYAAABkAAAAAQAAAGQAAA"
+"ADAAAAZAAAAAIAAABkAAAAZwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAsAAAB"
+"AAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAA"
+"AAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAA"
+"AAAAAAnAAAAAQAAAAAAAAPoAAAAACc="
+          PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
           Axes          "1"
           TimeRange     "0.0"
           ScrollingMode "1"
@@ -369,7 +379,7 @@ Plecs {
               Type          Sum
               Name          "Sum"
               Show          off
-              Position      [300, 220]
+              Position      [230, 220]
               Direction     up
               Flipped       off
               Parameter {
@@ -392,7 +402,7 @@ Plecs {
               Type          Sum
               Name          "Sum2"
               Show          off
-              Position      [295, 40]
+              Position      [280, 40]
               Direction     up
               Flipped       off
               Parameter {
@@ -474,7 +484,7 @@ Plecs {
               Type          Input
               Name          "Vref"
               Show          on
-              Position      [245, 195]
+              Position      [175, 195]
               Direction     right
               Flipped       off
               Parameter {
@@ -492,7 +502,7 @@ Plecs {
               Type          Input
               Name          "wref"
               Show          on
-              Position      [240, 15]
+              Position      [225, 15]
               Direction     right
               Flipped       off
               Parameter {
@@ -510,7 +520,7 @@ Plecs {
               Type          Input
               Name          "|V|"
               Show          on
-              Position      [245, 250]
+              Position      [175, 250]
               Direction     right
               Flipped       off
               Parameter {
@@ -528,7 +538,7 @@ Plecs {
               Type          Input
               Name          "w"
               Show          on
-              Position      [240, 65]
+              Position      [225, 65]
               Direction     right
               Flipped       off
               Parameter {
@@ -730,6 +740,29 @@ Plecs {
                 Show          off
               }
             }
+            Component {
+              Type          Gain
+              Name          "V"
+              Show          on
+              Position      [290, 220]
+              Direction     right
+              Flipped       off
+              Parameter {
+                Variable      "K"
+                Value         "V*0.2"
+                Show          off
+              }
+              Parameter {
+                Variable      "Multiplication"
+                Value         "1"
+                Show          off
+              }
+              Parameter {
+                Variable      "DataType"
+                Value         "11"
+                Show          off
+              }
+            }
             Connection {
               Type          Signal
               SrcComponent  "wref"
@@ -748,7 +781,7 @@ Plecs {
               Type          Signal
               SrcComponent  "|V|"
               SrcTerminal   1
-              Points        [300, 250]
+              Points        [230, 250]
               DstComponent  "Sum"
               DstTerminal   3
             }
@@ -789,36 +822,6 @@ Plecs {
             }
             Connection {
               Type          Signal
-              SrcComponent  "Sum2"
-              SrcTerminal   1
-              Points        [315, 40]
-              Branch {
-                DstComponent  "0.117"
-                DstTerminal   1
-              }
-              Branch {
-                Points        [315, 170]
-                DstComponent  "0.1207"
-                DstTerminal   1
-              }
-            }
-            Connection {
-              Type          Signal
-              SrcComponent  "Sum"
-              SrcTerminal   1
-              Points        [330, 220]
-              Branch {
-                Points        [330, 90]
-                DstComponent  "0.0604"
-                DstTerminal   1
-              }
-              Branch {
-                DstComponent  "0.0585"
-                DstTerminal   1
-              }
-            }
-            Connection {
-              Type          Signal
               SrcComponent  "Sum3"
               SrcTerminal   1
               Points        [460, 65]
@@ -845,6 +848,43 @@ Plecs {
                 Points        [460, 135]
                 DstComponent  "Scope"
                 DstTerminal   2
+              }
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "Sum2"
+              SrcTerminal   1
+              Points        [315, 40]
+              Branch {
+                DstComponent  "0.117"
+                DstTerminal   1
+              }
+              Branch {
+                Points        [315, 170]
+                DstComponent  "0.1207"
+                DstTerminal   1
+              }
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "Sum"
+              SrcTerminal   1
+              DstComponent  "V"
+              DstTerminal   1
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "V"
+              SrcTerminal   2
+              Points        [330, 220]
+              Branch {
+                Points        [330, 90]
+                DstComponent  "0.0604"
+                DstTerminal   1
+              }
+              Branch {
+                DstComponent  "0.0585"
+                DstTerminal   1
               }
             }
           }
@@ -1275,7 +1315,7 @@ Plecs {
               Flipped       off
               Parameter {
                 Variable      "K"
-                Value         "1e-4*1e2"
+                Value         "1e-4"
                 Show          off
               }
               Parameter {
@@ -1298,7 +1338,7 @@ Plecs {
               Flipped       off
               Parameter {
                 Variable      "K"
-                Value         "1e-6*1e4"
+                Value         "1e-6"
                 Show          off
               }
               Parameter {
@@ -1531,7 +1571,7 @@ Plecs {
             Direction     right
           }
           Schematic {
-            Location      [322, 27; 1280, 1026]
+            Location      [0, 23; 1280, 711]
             ZoomFactor    1.14437
             SliderPosition [0, 0]
             ShowBrowser   off
@@ -1829,7 +1869,7 @@ Plecs {
               Type          Output
               Name          "|V|"
               Show          on
-              Position      [760, 120]
+              Position      [875, 120]
               Direction     right
               Flipped       off
               Parameter {
@@ -1847,7 +1887,7 @@ Plecs {
               Type          Output
               Name          "w"
               Show          on
-              Position      [665, 180]
+              Position      [755, 180]
               Direction     right
               Flipped       off
               Parameter {
@@ -3235,7 +3275,7 @@ Plecs {
               Type          Goto
               Name          "Goto"
               Show          off
-              Position      [665, 160]
+              Position      [755, 160]
               Direction     right
               Flipped       off
               Parameter {
@@ -3290,6 +3330,58 @@ Plecs {
                 Show          off
               }
             }
+            Component {
+              Type          TransferFunction
+              Name          "LPF"
+              Show          on
+              Position      [785, 120]
+              Direction     right
+              Flipped       off
+              Frame         [-30, -15; 30, 15]
+              LabelPosition [0, 18]
+              LabelAlign    up
+              Parameter {
+                Variable      "Numerator"
+                Value         "[1]"
+                Show          off
+              }
+              Parameter {
+                Variable      "Denominator"
+                Value         "[1/(2*pi*1) 1]"
+                Show          off
+              }
+              Parameter {
+                Variable      "X0"
+                Value         "0"
+                Show          off
+              }
+            }
+            Component {
+              Type          TransferFunction
+              Name          "LPF1"
+              Show          on
+              Position      [640, 180]
+              Direction     right
+              Flipped       off
+              Frame         [-30, -15; 30, 15]
+              LabelPosition [0, 18]
+              LabelAlign    up
+              Parameter {
+                Variable      "Numerator"
+                Value         "[1]"
+                Show          off
+              }
+              Parameter {
+                Variable      "Denominator"
+                Value         "[1/(2*pi*1) 1]"
+                Show          off
+              }
+              Parameter {
+                Variable      "X0"
+                Value         "0"
+                Show          off
+              }
+            }
             Connection {
               Type          Signal
               SrcComponent  "Product"
@@ -3323,16 +3415,9 @@ Plecs {
                 DstTerminal   1
               }
               Branch {
-                Points        [555, 180; 600, 180]
-                Branch {
-                  DstComponent  "w"
-                  DstTerminal   1
-                }
-                Branch {
-                  Points        [600, 160]
-                  DstComponent  "Goto"
-                  DstTerminal   1
-                }
+                Points        [555, 180]
+                DstComponent  "LPF1"
+                DstTerminal   1
               }
             }
             Connection {
@@ -3488,8 +3573,30 @@ Plecs {
               Type          Signal
               SrcComponent  "Delay1"
               SrcTerminal   2
+              DstComponent  "LPF"
+              DstTerminal   1
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "LPF"
+              SrcTerminal   2
               DstComponent  "|V|"
               DstTerminal   1
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "LPF1"
+              SrcTerminal   2
+              Points        [700, 180]
+              Branch {
+                DstComponent  "w"
+                DstTerminal   1
+              }
+              Branch {
+                Points        [700, 160]
+                DstComponent  "Goto"
+                DstTerminal   1
+              }
             }
           }
         }
@@ -3872,7 +3979,7 @@ Plecs {
             Direction     left
           }
           Schematic {
-            Location      [492, 558; 1298, 828]
+            Location      [472, 287; 1278, 557]
             ZoomFactor    0.873846
             SliderPosition [0, 4]
             ShowBrowser   off

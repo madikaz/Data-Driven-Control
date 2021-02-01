@@ -3,7 +3,7 @@ Plecs {
   Version       "4.4"
   CircuitModel  "ContStateSpace"
   StartTime     "0.0"
-  StopTime      "10"
+  StopTime      "100"
   Timeout       ""
   Solver        "radau"
   MaxStep       "1e-3"
