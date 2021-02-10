@@ -1,5 +1,5 @@
 Plecs {
-  Name          "1ph GFM inverter"
+  Name          "1ph GFM inverter Agg"
   Version       "4.4"
   CircuitModel  "ContStateSpace"
   StartTime     "0.0"
@@ -64,13 +64,14 @@ Plecs {
       SampleTime    "-1"
       CodeGenDiscretizationMethod "2"
       CodeGenTarget "Generic"
-      MaskType      "Single phase GFM inverter"
-      MaskDescription "Single phase GFM inverter"
+      MaskType      "Aggregate single phase GFM inverter"
+      MaskDescription "Aggregate single phase GFM inverter"
       MaskIconFrame on
       MaskIconOpaque off
       MaskIconRotates on
       MaskInit      "V_DQ = V*sqrt(2)\nI_DQ = 2*S/V_DQ\nZ_DQ = V_DQ/I_DQ\nR1_D"
-"Q = R1/Z_DQ\nR2_DQ = R2/Z_DQ\nL_DQ = L*w_0/Z_DQ\nKp_PLL = 30\nKi_PLL = 100"
+"Q = R1/Z_DQ/n\nR2_DQ = R2/Z_DQ/n\nL_DQ = L*w_0/Z_DQ/n\nKp_PLL = 30\nKi_PLL = "
+"100"
       Parameter {
         Variable      "S"
         Prompt        "Rated Power"
@@ -94,6 +95,15 @@ Plecs {
         Prompt        "Nominal Frequency"
         Type          FreeText
         Value         "2*pi*60"
+        Show          off
+        Tunable       off
+        TabName       ""
+      }
+      Parameter {
+        Variable      "n"
+        Prompt        "Number of inverters per phase"
+        Type          FreeText
+        Value         "15"
         Show          off
         Tunable       off
         TabName       ""
@@ -193,7 +203,7 @@ Plecs {
       Schematic {
         Location      [1, 33; 1277, 710]
         ZoomFactor    1.14797
-        SliderPosition [0, -1]
+        SliderPosition [0, 196]
         ShowBrowser   off
         BrowserWidth  100
         Component {
@@ -361,7 +371,7 @@ Plecs {
               Type          Sum
               Name          "Sum"
               Show          off
-              Position      [235, 220]
+              Position      [225, 220]
               Direction     up
               Flipped       off
               Parameter {
@@ -430,7 +440,7 @@ Plecs {
               Type          Output
               Name          "iq"
               Show          on
-              Position      [605, 65]
+              Position      [670, 65]
               Direction     right
               Flipped       off
               Parameter {
@@ -448,7 +458,7 @@ Plecs {
               Type          Output
               Name          "id"
               Show          on
-              Position      [605, 195]
+              Position      [670, 195]
               Direction     right
               Flipped       off
               Parameter {
@@ -466,7 +476,7 @@ Plecs {
               Type          Input
               Name          "Vref"
               Show          on
-              Position      [180, 195]
+              Position      [170, 195]
               Direction     right
               Flipped       off
               Parameter {
@@ -502,7 +512,7 @@ Plecs {
               Type          Input
               Name          "|V|"
               Show          on
-              Position      [120, 275]
+              Position      [90, 285]
               Direction     right
               Flipped       off
               Parameter {
@@ -520,7 +530,7 @@ Plecs {
               Type          Input
               Name          "w"
               Show          on
-              Position      [160, 100]
+              Position      [165, 110]
               Direction     right
               Flipped       off
               Parameter {
@@ -538,7 +548,7 @@ Plecs {
               Type          Scope
               Name          "Scope"
               Show          off
-              Position      [600, 130]
+              Position      [665, 130]
               Direction     up
               Flipped       off
               Location      [0, 0; 0, 0]
@@ -724,6 +734,88 @@ Plecs {
             }
             Component {
               Type          Gain
+              Name          "n"
+              Show          off
+              Position      [480, 65]
+              Direction     right
+              Flipped       off
+              Parameter {
+                Variable      "K"
+                Value         "n"
+                Show          off
+              }
+              Parameter {
+                Variable      "Multiplication"
+                Value         "1"
+                Show          off
+              }
+              Parameter {
+                Variable      "DataType"
+                Value         "11"
+                Show          off
+              }
+            }
+            Component {
+              Type          Gain
+              Name          "n1"
+              Show          off
+              Position      [480, 195]
+              Direction     right
+              Flipped       off
+              Parameter {
+                Variable      "K"
+                Value         "n"
+                Show          off
+              }
+              Parameter {
+                Variable      "Multiplication"
+                Value         "1"
+                Show          off
+              }
+              Parameter {
+                Variable      "DataType"
+                Value         "11"
+                Show          off
+              }
+            }
+            Component {
+              Type          Saturation
+              Name          "Saturation1"
+              Show          off
+              Position      [230, 110]
+              Direction     right
+              Flipped       off
+              Parameter {
+                Variable      "UpperLimit"
+                Value         "389"
+                Show          off
+              }
+              Parameter {
+                Variable      "LowerLimit"
+                Value         "365"
+                Show          off
+              }
+            }
+            Component {
+              Type          Saturation
+              Name          "Saturation"
+              Show          off
+              Position      [165, 285]
+              Direction     right
+              Flipped       off
+              Parameter {
+                Variable      "UpperLimit"
+                Value         "1.2"
+                Show          off
+              }
+              Parameter {
+                Variable      "LowerLimit"
+                Value         "0.8"
+                Show          off
+              }
+            }
+            Component {
+              Type          Gain
               Name          "V*sqrt(2)"
               Show          on
               Position      [285, 220]
@@ -749,7 +841,7 @@ Plecs {
               Type          Gain
               Name          "1/I_DQ"
               Show          on
-              Position      [485, 65]
+              Position      [555, 65]
               Direction     right
               Flipped       off
               Parameter {
@@ -772,7 +864,7 @@ Plecs {
               Type          Gain
               Name          "1/I_DQ1"
               Show          on
-              Position      [485, 195]
+              Position      [550, 195]
               Direction     right
               Flipped       off
               Parameter {
@@ -788,42 +880,6 @@ Plecs {
               Parameter {
                 Variable      "DataType"
                 Value         "11"
-                Show          off
-              }
-            }
-            Component {
-              Type          Saturation
-              Name          "Saturation"
-              Show          off
-              Position      [185, 275]
-              Direction     right
-              Flipped       off
-              Parameter {
-                Variable      "UpperLimit"
-                Value         "1.2"
-                Show          off
-              }
-              Parameter {
-                Variable      "LowerLimit"
-                Value         "0.8"
-                Show          off
-              }
-            }
-            Component {
-              Type          Saturation
-              Name          "Saturation1"
-              Show          off
-              Position      [220, 100]
-              Direction     right
-              Flipped       off
-              Parameter {
-                Variable      "UpperLimit"
-                Value         "389"
-                Show          off
-              }
-              Parameter {
-                Variable      "LowerLimit"
-                Value         "365"
                 Show          off
               }
             }
@@ -871,18 +927,47 @@ Plecs {
             }
             Connection {
               Type          Signal
-              SrcComponent  "Sum2"
+              SrcComponent  "Sum3"
               SrcTerminal   1
-              Points        [315, 40]
-              Branch {
-                DstComponent  "0.117"
-                DstTerminal   1
-              }
-              Branch {
-                Points        [315, 170]
-                DstComponent  "0.1207"
-                DstTerminal   1
-              }
+              DstComponent  "n"
+              DstTerminal   1
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "Sum4"
+              SrcTerminal   1
+              DstComponent  "n1"
+              DstTerminal   1
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "w"
+              SrcTerminal   1
+              DstComponent  "Saturation1"
+              DstTerminal   1
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "Saturation1"
+              SrcTerminal   2
+              Points        [265, 110]
+              DstComponent  "Sum2"
+              DstTerminal   3
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "|V|"
+              SrcTerminal   1
+              DstComponent  "Saturation"
+              DstTerminal   1
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "Saturation"
+              SrcTerminal   2
+              Points        [225, 285]
+              DstComponent  "Sum"
+              DstTerminal   3
             }
             Connection {
               Type          Signal
@@ -908,8 +993,23 @@ Plecs {
             }
             Connection {
               Type          Signal
-              SrcComponent  "Sum3"
+              SrcComponent  "Sum2"
               SrcTerminal   1
+              Points        [315, 40]
+              Branch {
+                DstComponent  "0.117"
+                DstTerminal   1
+              }
+              Branch {
+                Points        [315, 170]
+                DstComponent  "0.1207"
+                DstTerminal   1
+              }
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "n"
+              SrcTerminal   2
               DstComponent  "1/I_DQ"
               DstTerminal   1
             }
@@ -917,21 +1017,21 @@ Plecs {
               Type          Signal
               SrcComponent  "1/I_DQ"
               SrcTerminal   2
-              Points        [540, 65]
+              Points        [605, 65]
               Branch {
                 DstComponent  "iq"
                 DstTerminal   1
               }
               Branch {
-                Points        [540, 125]
+                Points        [605, 125]
                 DstComponent  "Scope"
                 DstTerminal   1
               }
             }
             Connection {
               Type          Signal
-              SrcComponent  "Sum4"
-              SrcTerminal   1
+              SrcComponent  "n1"
+              SrcTerminal   2
               DstComponent  "1/I_DQ1"
               DstTerminal   1
             }
@@ -939,46 +1039,16 @@ Plecs {
               Type          Signal
               SrcComponent  "1/I_DQ1"
               SrcTerminal   2
-              Points        [540, 195]
+              Points        [605, 195]
               Branch {
                 DstComponent  "id"
                 DstTerminal   1
               }
               Branch {
-                Points        [540, 135]
+                Points        [605, 135]
                 DstComponent  "Scope"
                 DstTerminal   2
               }
-            }
-            Connection {
-              Type          Signal
-              SrcComponent  "|V|"
-              SrcTerminal   1
-              DstComponent  "Saturation"
-              DstTerminal   1
-            }
-            Connection {
-              Type          Signal
-              SrcComponent  "Saturation"
-              SrcTerminal   2
-              Points        [235, 275]
-              DstComponent  "Sum"
-              DstTerminal   3
-            }
-            Connection {
-              Type          Signal
-              SrcComponent  "w"
-              SrcTerminal   1
-              DstComponent  "Saturation1"
-              DstTerminal   1
-            }
-            Connection {
-              Type          Signal
-              SrcComponent  "Saturation1"
-              SrcTerminal   2
-              Points        [265, 100]
-              DstComponent  "Sum2"
-              DstTerminal   3
             }
           }
         }
@@ -1009,7 +1079,7 @@ Plecs {
           Flipped       off
           Parameter {
             Variable      "R"
-            Value         "R1"
+            Value         "R1/n"
             Show          off
           }
         }
@@ -1022,7 +1092,7 @@ Plecs {
           Flipped       off
           Parameter {
             Variable      "L"
-            Value         "L"
+            Value         "L/n"
             Show          off
           }
           Parameter {
@@ -1040,7 +1110,7 @@ Plecs {
           Flipped       off
           Parameter {
             Variable      "R"
-            Value         "R2"
+            Value         "R2/n"
             Show          off
           }
         }
@@ -1408,7 +1478,7 @@ Plecs {
               Flipped       off
               Parameter {
                 Variable      "K"
-                Value         "1e-4"
+                Value         "1e-4/n"
                 Show          off
               }
               Parameter {
@@ -1431,7 +1501,7 @@ Plecs {
               Flipped       off
               Parameter {
                 Variable      "K"
-                Value         "1e-6"
+                Value         "1e-6/n"
                 Show          off
               }
               Parameter {
@@ -1980,7 +2050,7 @@ Plecs {
               Type          Output
               Name          "w"
               Show          on
-              Position      [770, 180]
+              Position      [780, 180]
               Direction     right
               Flipped       off
               Parameter {
